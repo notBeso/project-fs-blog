@@ -1,0 +1,23 @@
+<?php
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\BlogController;
+
+// show list
+Route::get('/blogs', [BlogController::class, 'index']);
+
+// create item
+Route::post('/blogs/create', [BlogController::class, 'store']);
+
+// show item
+Route::get('/blogs/{id}', [BlogController::class, 'show']);
+
+// update new info to item
+Route::put('/blogs/{id}/edit', [BlogController::class, 'update']);
+
+// delete item
+Route::delete('/blogs/{id}/delete', [BlogController::class, 'destroy']);
+
+// search item
+Route::get('/blogs/search', [BlogController::class, 'destroy']);
