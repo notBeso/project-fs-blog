@@ -26,7 +26,7 @@
 
 <style>
     .menu-bar{
-        height: 100vh;
+       
     }
 
     ul {

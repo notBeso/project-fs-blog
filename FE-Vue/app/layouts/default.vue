@@ -47,7 +47,7 @@
 
     .inject-content {
         margin: 30px ;
-        height: 100vh;
+        /* height: 100vh; */
         background-color:antiquewhite;
     }
 </style>

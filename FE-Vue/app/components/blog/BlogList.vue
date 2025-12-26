@@ -65,7 +65,7 @@
     
     table {
         border-collapse: collapse;
-        max-height: 50px;
+        /* max-height: 50px; */
         overflow: scroll;
         overflow-x: hidden;
     }

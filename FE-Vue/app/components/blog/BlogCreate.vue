@@ -165,9 +165,9 @@
 <style scoped>
     .main-content {
         background-color: WhiteSmoke; /* DELETE LATER */
-        overflow: scroll;
-        overflow-x:hidden;
-        height: calc(100vh - 20px);
+        /* overflow: scroll;
+        overflow-x:hidden; */
+        /* height: calc(100vh - 20px); */
         padding:0 0 20px 0;
     }
 
@@ -175,9 +175,9 @@
         background-color: white;
         padding: 20px;
         text-align: left;
-        overflow: scroll;
+        /* overflow: scroll;
         overflow-x:hidden;
-        overflow-y:hidden;
+        overflow-y:hidden; */
     }
     
     p {
