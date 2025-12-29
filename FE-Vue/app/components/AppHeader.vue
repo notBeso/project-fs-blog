@@ -16,6 +16,7 @@
         display: grid;
         grid-template-columns: 1fr 5fr;
         gap: 0; 
+        width: 100vw;
     }
 
     .grid-item {

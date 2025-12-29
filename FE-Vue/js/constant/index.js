@@ -21,18 +21,18 @@ const routes = [
         component: ListPage,
         },
         {
-        path: '/Search',
+        path: '/search',
         name: 'Search',
         component: SearchPage,
         },
         {
-        path: '/New',
+        path: '/new',
         name: 'New',
         component: NewPage,
         },
         {
         path: '/edit/:id',
-        name: 'Edit',
+        name: 'EP',
         component: EditPage,
         props: true
         },

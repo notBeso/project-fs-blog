@@ -107,9 +107,11 @@ import axios from 'axios';
 
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-
-
+// import Vue from 'vue';
+// import VueRouter from 'vue-router';
+// Vue.use(VueRouter);
 const router = useRouter()
+
 
 export default {
     data() {
@@ -117,8 +119,6 @@ export default {
             blogs: [],
         };
     },
-
-    // props: ['blog'],
 
     methods: {
         async deleteItem(id) {
@@ -136,9 +136,11 @@ export default {
             }
         },
 
-        async goDetail(id) {
-            alert('click');
-            this.$router.push({ path: '/edit', params: { id: id } });
+        async goDetail(blogid) {
+            alert(router + '  click ' + blogid);
+            await router.push({ name: 'EP', params: { id: blogid } });
+            // alert('done')
+            this.$router.push(`/edit/${blogid}`);
         }
         
     },

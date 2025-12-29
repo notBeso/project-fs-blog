@@ -17,5 +17,7 @@
         text-align: center;
         color: white;
         height: 80px;
+        display: fixed;
+        flex-direction: column;
     }
 </style>

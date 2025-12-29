@@ -6,7 +6,6 @@
 <template>
   <div>
     <BlogSearchForm/>
-    <BlogList/>
   </div>
   
 </template>

@@ -2,7 +2,7 @@
     <div class="main-content">
         <p>Edit Blogs</p>
         <div class="main-form-container">
-            <p><strong>ID:</strong> {{ user }}</p>
+            <p><strong>ID:</strong> {{ item }}</p>
             <p><strong>Description:</strong> {{user}}</p>
             <p><strong>Title:</strong> {{ user }}</p>
             <p><strong>Detail:</strong> {{ user }}</p>
@@ -141,36 +141,31 @@
     const addBlog = async () => {
         alert('CREATE')
         try {
-          const blog = {
-            id: 1,
-            title: title.value,
-            des: describe.value,
-            detail: detail.value,
-            category:optType.value,
-            public:publicity.value,
-            data_public:DateSelect.value,
-            position: selectedLocation.value,
-            thumbs: selectedFile.value,
-          }
-          
-          const response = await fetch('http://localhost:8000/api/blogs/id/edit', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(blog)
-          })
+            const blog = {
+                title: title.value,
+                des: describe.value,
+                detail: detail.value,
+                category:optType.value,
+                public:publicity.value,
+                data_public:DateSelect.value,
+                position: selectedLocation.value,
+                thumbs: selectedFile.value,
+            }
+            
+            const response = await fetch('http://localhost:8000/api/blogs/id/edit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(blog)
+            })
 
-          if (response.ok) {
-          // Handle success (e.g., show a message, reset form, etc.)
-          console.log('User added successfully')
-          // Reset form
-          clearBox()
-          // user.value = { name: '', email: '' }
-          } else {
-          // Handle error
-          console.error('Failed to add user')
-          }
+            if (response.ok) {
+            console.log('User added successfully')
+            clearBox()
+            } else {
+            console.error('Failed to add user')
+            }
         } catch (error) {
             console.error('Error:', error)
         }

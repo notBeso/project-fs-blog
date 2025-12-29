@@ -20,4 +20,4 @@ Route::put('/blogs/{id}/edit', [BlogController::class, 'update']);
 Route::delete('/blogs/{id}/delete', [BlogController::class, 'destroy']);
 
 // search item
-Route::get('/blogs/search', [BlogController::class, 'destroy']);
+Route::get('/blogs/search', [BlogController::class, 'search']);

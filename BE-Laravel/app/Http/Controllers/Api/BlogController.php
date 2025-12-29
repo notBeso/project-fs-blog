@@ -76,4 +76,14 @@ class BlogController
         $blog ->forceDelete();
         // return $blog;
     }
+
+    public function search(Request $request)
+    {
+        $searchTerm = $request->input('q');
+
+        $results = Blog::where('title', 'LIKE', "%{$searchTerm}%")
+                           ->get();
+
+        return response()->json($results);
+    }
 }
