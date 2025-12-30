@@ -96,10 +96,13 @@
     const publicity = ref('')
     const optType = ref('');
     const selectedLocation = ref([])
+    const DateSelect = ref('')
+
     const options = [
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-        { value: '3', label: '3' },
+        { value: '1', label: 'Kinh Doanh' },
+        { value: '2', label: 'Giải Trí' },
+        { value: '3', label: 'Thế Giới' },
+        { value: '4', label: 'Thời Sự' },
     ];
 
     const locations = [
@@ -108,8 +111,7 @@
         { id: '3', label: 'Châu Âu' },
         { id: '4', label: 'Châu Mỹ' },
     ];
-    const DateSelect = ref('')
-
+    
     const handleFileChange = (event) => {
         selectedFile.value = event.target.files[0]
     }
@@ -120,10 +122,10 @@
         describe.value = ''
         detail.value = ''
         
-
         if (fileInput.value) {
             fileInput.value.value = ''
         }
+
         selectedFile.value = null
 
         publicity.value = ''
@@ -135,27 +137,27 @@
     const addBlog = async () => {
         alert('CREATE')
         try {
-          const blog = {
-            id: 1,
-            title: title.value,
-            des: describe.value,
-            detail: detail.value,
-            category:optType.value,
-            public:publicity.value,
-            data_public:DateSelect.value,
-            position: selectedLocation.value,
-            thumbs: selectedFile.value,
-          }
-          
-          const response = await fetch('http://localhost:8000/api/blogs/create', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(blog)
-          })
+            const blog = {
+                id: 1,
+                title: title.value,
+                des: describe.value,
+                detail: detail.value,
+                category:optType.value,
+                public:publicity.value,
+                data_public:DateSelect.value,
+                position: selectedLocation.value,
+                thumbs: selectedFile.value,
+            }
+            
+            const response = await fetch('http://localhost:8000/api/blogs/create', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(blog)
+            })
 
-          console.log('User added successfully')
+            console.log('User added successfully')
         } catch (error) {
             console.error('Error:', error)
         }
@@ -164,10 +166,7 @@
 
 <style scoped>
     .main-content {
-        background-color: WhiteSmoke; /* DELETE LATER */
-        /* overflow: scroll;
-        overflow-x:hidden; */
-        /* height: calc(100vh - 20px); */
+        background-color: WhiteSmoke;
         padding:0 0 20px 0;
     }
 
@@ -175,9 +174,6 @@
         background-color: white;
         padding: 20px;
         text-align: left;
-        /* overflow: scroll;
-        overflow-x:hidden;
-        overflow-y:hidden; */
     }
     
     p {

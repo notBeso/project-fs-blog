@@ -14,7 +14,6 @@
     <div class="main-content" style="padding-bottom: 20px;">
         <p>List Blog</p>
         <div class="main-form-container">
-            sfbsfbsd
             <div>{{ results.id }}</div>
             <table v-if="this.results.length" width="100%">
                 <thead>
@@ -158,7 +157,6 @@ export default {
             this.results = [];
             return;
         }
-        // Make GET request to Laravel API, appending the query parameter
         axios.get(`http://localhost:8000/api/blogs/search?q=${encodeURIComponent(this.query)}`)
             .then(response => {
             this.results = response.data;
@@ -167,7 +165,7 @@ export default {
             .catch(error => {
             console.error("There was an error with the search request:", error);
             });
-        }, 300) // Debounce by 300ms to reduce API calls for live search
+        }, 300)
     }
 };
 </script>
