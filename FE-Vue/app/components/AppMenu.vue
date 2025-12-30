@@ -38,7 +38,7 @@
     a {
         text-decoration: none;
         color: black;
-        font-size: 25px;
+        font-size: 150%;
     }
 
     li {
@@ -48,6 +48,7 @@
     
     img {
         margin-right: 20px;
+        height: 90%;
     }
 </style>
 

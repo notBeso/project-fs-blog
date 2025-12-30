@@ -104,21 +104,15 @@
 
 <script>
 import axios from 'axios';
-
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-// import Vue from 'vue';
-// import VueRouter from 'vue-router';
-// Vue.use(VueRouter);
-const router = useRouter()
-
 
 export default {
     data() {
         return {
             blogs: [],
         };
-    },
+    }, 
 
     methods: {
         async deleteItem(id) {
@@ -138,11 +132,8 @@ export default {
 
         async goDetail(blogid) {
             alert(router + '  click ' + blogid);
-            //await router.push({ name: 'EP', params: { id: blogid } });
-            // alert('done')
             this.$router.push(`/edit/${blogid}`);
         }
-        
     },
     
         async created() {

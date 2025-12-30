@@ -4,11 +4,12 @@
         <div class="main-form-container">
             <form>
                 <label for="blog-tittle">Tiêu đề:</label>
-                <input 
+                <textarea 
                     type="text" 
                     id="tittle" 
                     name="blog-tittle" 
-                    v-model="title">
+                    style="height: 30px;"
+                    v-model="title"></textarea>
             </form>
 
             <form>
@@ -50,10 +51,10 @@
             <form style="display:flex;">
                 
                 <input class="form-check-input" type="radio" value="true" v-model="publicity">
-                <span class="form-check-label" for="inlineRadio1">Yes</span>
+                <span class="form-check-label" >Yes</span>
                 
                 <input class="form-check-input" type="radio" value="false" v-model="publicity">
-                <span class="form-check-label" for="inlineRadio2">No</span>
+                <span class="form-check-label" >No</span>
                 
             </form>
 
@@ -61,10 +62,10 @@
                 <div class="form-slot">
                     <form>
                         <label for="blog-tittle">Loại:</label>
-                        <select class="form-control" id="exampleFormControlSelect1" v-model="optType">
+                        <select class="form-control" id="exampleFormControlSelect1" v-model="optType" style="width: 80%;">
                             <option disabled>-Choose a type-</option>
-                            <option v-for="option in options" >
-                                {{ option.label }}
+                            <option v-for="opt in options" >
+                                {{ opt.label }}
                             </option>
                         </select>
                     </form>
@@ -72,7 +73,7 @@
                 <div class="form-slot">
                     <form>
                         <label for="blog-tittle">Date Public:</label>
-                        <input type="date" id="myDate" name="selectedDate" v-model="DateSelect">
+                        <input type="date" id="myDate" name="selectedDate" v-model="DateSelect" style="width: 80%;">
                     </form>
                 </div>
             </div>
@@ -86,17 +87,18 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
+    import { ref } from 'vue';
+    import axios from 'axios';
 
     const title = ref('');
     const describe = ref('');
     const detail = ref('');
-    const fileInput = ref(null)
-    const selectedFile = ref(null)
-    const publicity = ref('')
+    const fileInput = ref(null);
+    const selectedFile = ref(null);
+    const publicity = ref('');
     const optType = ref('');
-    const selectedLocation = ref([])
-    const DateSelect = ref('')
+    const selectedLocation = ref([]);
+    const DateSelect = ref('');
 
     const options = [
         { value: '1', label: 'Kinh Doanh' },
@@ -118,27 +120,26 @@
 
     const clearBox = () => {
         alert('click')
-        title.value = ''
-        describe.value = ''
-        detail.value = ''
+        title.value = '';
+        describe.value = '';
+        detail.value = '';
         
         if (fileInput.value) {
-            fileInput.value.value = ''
+            fileInput.value.value = '';
         }
 
-        selectedFile.value = null
+        selectedFile.value = null;
 
-        publicity.value = ''
-        selectedLocation.value = []
-        optType.value = ''
-        DateSelect.value = ''
+        publicity.value = '';
+        selectedLocation.value = [];
+        optType.value = '';
+        DateSelect.value = '';
     }
 
     const addBlog = async () => {
         alert('CREATE')
         try {
             const blog = {
-                id: 1,
                 title: title.value,
                 des: describe.value,
                 detail: detail.value,
@@ -148,18 +149,10 @@
                 position: selectedLocation.value,
                 thumbs: selectedFile.value,
             }
-            
-            const response = await fetch('http://localhost:8000/api/blogs/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(blog)
-            })
-
-            console.log('User added successfully')
+            const response = await axios.post(`http://localhost:8000/api/blogs/create`, blog);
+            console.log('User added successfully');
         } catch (error) {
-            console.error('Error:', error)
+            console.error('Error:', error);
         }
     }
 </script>
@@ -167,6 +160,8 @@
 <style scoped>
     .main-content {
         background-color: WhiteSmoke;
+        padding:0;
+        font-size: 30px;
     }
 
     .main-form-container {
@@ -194,8 +189,8 @@
     }
 
     textarea{
-        width: 98%;
-        min-height: 100px;
+        width: 90%;
+        min-height: 30px;
         font-size: 25px;
         font-weight: 200;
         border: 1px solid gray;

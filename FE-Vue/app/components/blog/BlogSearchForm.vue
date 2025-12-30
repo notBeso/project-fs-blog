@@ -36,12 +36,12 @@
                         <td>{{ blog.public }}</td>
                         <td>{{ blog.position }}</td>
                         <td>{{ blog.data_public }}</td>
-                        <!-- <td>
+                        <td>
                             <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>
                         </td>
                         <td>
                             <button to="/" class="del-btn" @click="deleteItem(blog.id)">Delete</button>
-                        </td> -->
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -144,28 +144,49 @@ import axios from 'axios';
 import { debounce } from 'lodash';
 
 export default {
-  data() {
-    return {
-      query: '',
-      results: [],
-    };
-  },
-  methods: {
-    performSearch: debounce(function () {
-        alert('click');
-        if (!this.query) {
-            this.results = [];
-            return;
+    data() {
+        return {
+        query: '',
+        results: [],
+        };
+    },
+    methods: {
+        performSearch: debounce(function () {
+            
+            if (!this.query) {
+                this.results = [];
+                return;
+            }
+            axios.get(`http://localhost:8000/api/blogs/search?q=${encodeURIComponent(this.query)}`)
+                .then(response => {
+                this.results = response.data;
+                })
+                .catch(error => {
+                console.error("There was an error with the search request:", error);
+                });
+        }, 300),
+
+        async deleteItem(id) {
+            if (confirm('Are you sure you want to delete this item?' + id)) {
+                try {
+                    await axios.delete(`http://localhost:8000/api/blogs/${id}/delete`);
+                    this.blogs = this.blogs.filter(blog => blog.id !== id);
+                    alert('Item deleted successfully!');
+                } 
+                catch (error) {
+                    console.error('Error deleting item:', error);
+                    alert('Failed to delete item.');
+                }
+                
+            }
+        },
+
+        async goDetail(blogid) {
+            alert(router + '  click ' + blogid);
+            this.$router.push(`/edit/${blogid}`);
         }
-        axios.get(`http://localhost:8000/api/blogs/search?q=${encodeURIComponent(this.query)}`)
-            .then(response => {
-            this.results = response.data;
-            alert(this.results.id)
-            })
-            .catch(error => {
-            console.error("There was an error with the search request:", error);
-            });
-        }, 300)
     }
 };
+
+
 </script>

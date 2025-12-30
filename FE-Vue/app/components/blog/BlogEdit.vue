@@ -164,26 +164,20 @@
                 thumbs: selectedFile.value,
             }
             const response = await axios.put(`http://localhost:8000/api/blogs/${blogId}`, blog);
-            if (response.ok) {
-                alert('ate')
-                console.log('User added successfully')
-                clearBox()
-            } else {
-                console.error('Failed to add user')
-            }
+            // if (response.ok) {
+            //     console.log('User added successfully')
+            // } else {
+            //     console.error('Failed to add user')
+            // }
         } catch (error) {
             console.error('Error:', error)
-        }
-        
+        } 
     }
 </script>
 
 <style scoped>
     .main-content {
-        background-color: WhiteSmoke; /* DELETE LATER */
-        /* overflow: scroll;
-        overflow-x:hidden; */
-        /* height: calc(100vh - 20px); */
+        background-color: WhiteSmoke; 
         padding:0 0 20px 0;
     }
 
