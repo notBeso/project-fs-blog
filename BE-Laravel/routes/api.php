@@ -10,14 +10,15 @@ Route::get('/blogs', [BlogController::class, 'index']);
 // create item
 Route::post('/blogs/create', [BlogController::class, 'store']);
 
+// search item
+Route::get('/blogs/search', [BlogController::class, 'search']);
+
 // show item
 Route::get('/blogs/{id}', [BlogController::class, 'show']);
 
 // update new info to item
-Route::put('/blogs/{id}/edit', [BlogController::class, 'update']);
+Route::put('/blogs/{id}', [BlogController::class, 'update']);
 
 // delete item
 Route::delete('/blogs/{id}/delete', [BlogController::class, 'destroy']);
 
-// search item
-Route::get('/blogs/search', [BlogController::class, 'search']);

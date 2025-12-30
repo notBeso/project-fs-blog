@@ -3,7 +3,7 @@
         <p>Search Blogs</p>
         <div class="main-form-container" style="padding: 40px;">
             
-            <form class="form-grid">
+            <form class="form-grid" @submit.prevent>
                 <label for="blog-tittle" style="text-align: left;">Title:</label>
                 <input class="search-bar" type="text" @keyup.enter="performSearch" placeholder="Search..." v-model="query" >
             </form>
@@ -36,7 +36,7 @@
                         <td>{{ blog.category }}</td>
                         <td>{{ blog.public }}</td>
                         <td>{{ blog.position }}</td>
-                        <td>{{ blog.data_pubblic }}</td>
+                        <td>{{ blog.data_public }}</td>
                         <!-- <td>
                             <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>
                         </td>

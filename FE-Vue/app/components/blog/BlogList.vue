@@ -22,7 +22,7 @@
                         <td>{{ blog.category }}</td>
                         <td>{{ blog.public }}</td>
                         <td>{{ blog.position }}</td>
-                        <td>{{ blog.data_pubblic }}</td>
+                        <td>{{ blog.data_public }}</td>
                         <td>
                             <!-- <button class="edit-btn" type="button">Edit</button> -->
                             <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>
@@ -138,7 +138,7 @@ export default {
 
         async goDetail(blogid) {
             alert(router + '  click ' + blogid);
-            await router.push({ name: 'EP', params: { id: blogid } });
+            //await router.push({ name: 'EP', params: { id: blogid } });
             // alert('done')
             this.$router.push(`/edit/${blogid}`);
         }

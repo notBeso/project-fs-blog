@@ -2,18 +2,14 @@
     <div class="main-content">
         <p>Edit Blogs</p>
         <div class="main-form-container">
-            <p><strong>ID:</strong> {{ item }}</p>
-            <p><strong>Description:</strong> {{user}}</p>
-            <p><strong>Title:</strong> {{ user }}</p>
-            <p><strong>Detail:</strong> {{ user }}</p>
-            <!-- {{ formatDate(item.createdAt) }} -->
+            
             <form>
                 <label for="blog-tittle">Tiêu đề:</label>
                 <input 
                     type="text" 
                     id="tittle" 
                     name="blog-tittle" 
-                    v-model="title">
+                    v-model= 'item.title'>
             </form>
 
             <form>
@@ -22,7 +18,7 @@
                     id="describe" 
                     name="blog-describe" 
                     style="height: 100px;"
-                    v-model="describe"></textarea>
+                    v-model="item.des"></textarea>
             </form>
 
             <form>
@@ -31,7 +27,7 @@
                     id="detail" 
                     name="blog-detail" 
                     style="height: 250px;"
-                    v-model="detail"></textarea>
+                    v-model="item.detail"></textarea>
             </form>
 
             <form>
@@ -40,24 +36,25 @@
                     type="file" 
                     style="border: none;"
                     @change="handleFileChange"
+                    v-on:change="item.thumbs"
                 />
             </form>
 
             <label for="blog-location">Vị trí:</label>    
             <form ref="myForm" style="display:flex;">
-                <div v-for="item in locations" :key="item.id" style="width: 150px;display: flex;">
-                  <input type="checkbox" v-model="selectedLocation" :value="item.id" style="display:flex; width: fit-content;">
-                  <span style="display:flex;">{{ item.label }}</span>
+                <div v-for="loc in locations" :key="loc.id" style="width: 150px;display: flex;">
+                  <input type="checkbox" v-model="item.position" :value="loc.id" style="display:flex; width: fit-content;">
+                  <span style="display:flex;">{{ loc.label }}</span>
                 </div>
             </form>
 
             <label for="blog-location">Public:</label>
             <form style="display:flex;">
                 
-                <input class="form-check-input" type="radio" value="true" v-model="publicity">
+                <input class="form-check-input" type="radio" value="true" v-model="item.public">
                 <span class="form-check-label" for="inlineRadio1">Yes</span>
                 
-                <input class="form-check-input" type="radio" value="false" v-model="publicity">
+                <input class="form-check-input" type="radio" value="false" v-model="item.public">
                 <span class="form-check-label" for="inlineRadio2">No</span>
                 
             </form>
@@ -66,10 +63,10 @@
                 <div class="form-slot">
                     <form>
                         <label for="blog-tittle">Loại:</label>
-                        <select class="form-control" id="exampleFormControlSelect1" v-model="optType">
+                        <select class="form-control" id="exampleFormControlSelect1" v-model="item.category">
                             <option disabled>-Choose a type-</option>
-                            <option v-for="option in options" >
-                                {{ option.label }}
+                            <option v-for="opt in options" >
+                                {{ opt.label }}
                             </option>
                         </select>
                     </form>
@@ -77,14 +74,14 @@
                 <div class="form-slot">
                     <form>
                         <label for="blog-tittle">Date Public:</label>
-                        <input type="date" id="myDate" name="selectedDate" v-model="DateSelect">
+                        <input type="date" id="myDate" name="selectedDate" v-model="item.data_public">
                     </form>
                 </div>
             </div>
             
         </div>
         <!-- <button class="submit-btn" type="submit">{{ store.isEdit ? 'Update' : 'Create' }}</button> -->
-        <button class="submit-btn" type="submit" @click="addBlog">Create</button>
+        <button class="submit-btn" type="submit" @click="updateBlog">Update</button>
         <button class="clear-btn" @click="clearBox">Clear</button>
     </div>
 </template>
@@ -92,7 +89,7 @@
 <script setup>
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
-    import { useRoute } from 'vue-router';
+    import { RouterLink, useRoute } from 'vue-router';
 
     const title = ref('');
     const describe = ref('');
@@ -138,28 +135,45 @@
         DateSelect.value = ''
     }
 
-    const addBlog = async () => {
-        alert('CREATE')
+    const route = useRoute();
+    
+    const blogId = route.params.id;
+
+    const fetchItemDetails = async () => {
         try {
+            // Make an API request to your Laravel endpoint
+            const response = await axios.get(`http://localhost:8000/api/blogs/${blogId}`);
+            return response.data
+        } catch (error) {
+            console.error('Error fetching item details:', error);
+        }
+    }
+
+    const item = ref(await fetchItemDetails())
+
+    const updateBlog = async () => {
+        alert('update')
+        try {
+            console.log(item)
             const blog = {
-                title: title.value,
-                des: describe.value,
-                detail: detail.value,
-                category:optType.value,
-                public:publicity.value,
-                data_public:DateSelect.value,
-                position: selectedLocation.value,
-                thumbs: selectedFile.value,
+                title: item.value.title,
+                des: item.value.des,
+                detail: item.value.detail,
+                category: item.value.category,
+                public: item.value.public,
+                data_public: item.value.data_public,
+                position: item.value.position,
+                thumbs: item.value.thumbs,
             }
             
-            const response = await fetch('http://localhost:8000/api/blogs/id/edit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(blog)
-            })
-
+            // const response = await fetch('http://localhost:8000/api/blogs/edit', {
+            // method: 'PUT',
+            // headers: {
+            //     'Content-Type': 'application/json'
+            // },
+            // body: JSON.stringify(blog)
+            // })
+            const response = await axios.put(`http://localhost:8000/api/blogs/${blogId}`, blog);
             if (response.ok) {
             console.log('User added successfully')
             clearBox()
@@ -169,22 +183,8 @@
         } catch (error) {
             console.error('Error:', error)
         }
+        RouterLink.pu
     }
-    const route = useRoute();
-    const item = ref(null);
-    const blogId = route.params.id;
-    const fetchItemDetails = async () => {
-        try {
-            // Make an API request to your Laravel endpoint
-            const response = await axios.get(`/api/blogs/${blogId}`);
-            item.value = response.data;
-        } catch (error) {
-            console.error('Error fetching item details:', error);
-        }
-    }   
-    onMounted(() => {
-    fetchItemDetails()
-    })
 </script>
 
 <!-- <script>
