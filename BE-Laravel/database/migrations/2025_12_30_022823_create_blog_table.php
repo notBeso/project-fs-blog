@@ -15,10 +15,10 @@ return new class extends Migration
             $table->text('title');
             $table->text('des');
             $table->text('detail');
-            $table->integer('category');
-            $table->boolean('public')->nullable();
-            $table->string('data_public')->nullable();
-            $table->string('position')->nullable(); //json (array)
+            $table->string('category');
+            $table->boolean('public');
+            $table->string('data_public');
+            $table->json('position')->nullable(); //json (array)
             $table->string('thumbs')->nullable(); //string or text
             $table->id('id');
         });
