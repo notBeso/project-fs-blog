@@ -167,7 +167,6 @@
 <style scoped>
     .main-content {
         background-color: WhiteSmoke;
-        padding:0 0 20px 0;
     }
 
     .main-form-container {
@@ -243,17 +242,16 @@
     }
 
     .submit-btn , .clear-btn {
-        border-radius: 5px;
-        margin: 5px;
+        border-radius: 2px;
         padding: 6px 10px;
         border: none;
         color: white;
-        margin-top: 15px;
+        margin: 15px 0;
     }
 
     .submit-btn {
         background-color: forestgreen;
-
+        margin-right: 10px;
     }
 
     .clear-btn {

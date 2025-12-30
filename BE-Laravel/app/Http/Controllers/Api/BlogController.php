@@ -28,8 +28,8 @@ class BlogController
         $blog->category = $request->category;
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
-        $blog->position = $request->position;
-        $blog->thumbs = $request->thumbs;
+        // $blog->position = $request->position;
+        // $blog->thumbs = $request->thumbs;
 
         $blog->save();
 
