@@ -41,9 +41,9 @@
 
             <label for="blog-location">Vị trí:</label>    
             <form ref="myForm" style="display:flex;">
-                <div v-for="item in locations" :key="item.id" style="width: 150px;display: flex;">
-                  <input type="checkbox" v-model="selectedLocation" :value="item.id" style="display:flex; width: fit-content;">
-                  <span style="display:flex;">{{ item.label }}</span>
+                <div v-for="loc in locations" :key="loc.label" style="width: 15%;display: flex;">
+                  <input type="checkbox" v-model="selectedLocation" :value="loc.label" style="display:flex; width: fit-content;">
+                  <span style="display:flex;font-size: large;">{{ loc.label }}</span>
                 </div>
             </form>
 
@@ -61,8 +61,8 @@
             <div class="double-form">
                 <div class="form-slot">
                     <form>
-                        <label for="blog-tittle">Loại:</label>
-                        <select class="form-control" id="exampleFormControlSelect1" v-model="optType" style="width: 80%;">
+                        <label >Loại:</label>
+                        <select class="form-control"  v-model="optType">
                             <option disabled>-Choose a type-</option>
                             <option v-for="opt in options" >
                                 {{ opt.label }}
@@ -72,15 +72,14 @@
                 </div>
                 <div class="form-slot">
                     <form>
-                        <label for="blog-tittle">Date Public:</label>
-                        <input type="date" id="myDate" name="selectedDate" v-model="DateSelect" style="width: 80%;">
+                        <label style="margin: 0 0 12.5px 0;">Date Public:</label>
+                        <input type="date" id="myDate" name="selectedDate" v-model="DateSelect" style=" height: 35px;">
                     </form>
                 </div>
             </div>
             
         </div>
-        <!-- <button class="submit-btn" type="submit">{{ store.isEdit ? 'Update' : 'Create' }}</button> -->
-        <button class="submit-btn" type="submit" @click="addBlog">Create</button>
+        <button class="submit-btn" type="submit" @click="addBlog">Submit</button>
         
         <button class="clear-btn" @click="clearBox">Clear</button>
     </div>
@@ -101,10 +100,10 @@
     const DateSelect = ref('');
 
     const options = [
-        { value: '1', label: 'Kinh Doanh' },
-        { value: '2', label: 'Giải Trí' },
-        { value: '3', label: 'Thế Giới' },
-        { value: '4', label: 'Thời Sự' },
+        { id: '1', label: 'Kinh Doanh' },
+        { id: '2', label: 'Giải Trí' },
+        { id: '3', label: 'Thế Giới' },
+        { id: '4', label: 'Thời Sự' },
     ];
 
     const locations = [
@@ -224,7 +223,7 @@
     .form-check-label {
         display: flex;
         margin-right: 2%;
-        font-size: larger;
+        font-size: large;
     }
     .form-check-input {
         width: fit-content;
@@ -233,7 +232,7 @@
     .form-control {
         height: 35px;
         border: 1px solid gray;
-        font-size: larger;
+        font-size: large;
     }
 
     .submit-btn , .clear-btn {

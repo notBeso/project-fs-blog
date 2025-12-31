@@ -24,16 +24,7 @@
                         <td>{{ blog.position }}</td>
                         <td>{{ blog.data_public }}</td>
                         <td>
-                            <!-- <button class="edit-btn" type="button">Edit</button> -->
-                            <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>
-                            <!-- <NuxtLink class="edit-btn" :to="{ name: 'Edit', params: { id: blog.id } }">
-                                Edit
-                            </NuxtLink> -->
-                           
-                            <!-- <a href="route('blogs.edit', blog.id)" class="edit-btn">Edit</a> -->
-                            <!-- <button class="edit-btn" to="{ name: 'Edit', params: { id: blog.id } }">
-                                Edit
-                            </button> -->
+                            <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>                           
                         </td>
                         <td>
                             <button to="/" class="del-btn" @click="deleteItem(blog.id)">Delete</button>
@@ -104,8 +95,11 @@
 
 <script>
 import axios from 'axios';
+
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+
+const router = useRouter();
 
 export default {
     data() {
@@ -134,6 +128,7 @@ export default {
             alert(router + '  click ' + blogid);
             this.$router.push(`/edit/${blogid}`);
         }
+        
     },
     
         async created() {

@@ -7,4 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Blog extends Model
 {
     public $timestamps = false;
+
+    protected $casts = [
+        'position' => 'array',
+        // 'thumbs' => 'array',
+    ];
+
 }

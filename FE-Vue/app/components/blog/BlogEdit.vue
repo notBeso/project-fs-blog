@@ -2,7 +2,6 @@
     <div class="main-content">
         <p>Edit Blogs</p>
         <div class="main-form-container">
-            
             <form>
                 <label for="blog-tittle">Tiêu đề:</label>
                 <input 
@@ -43,7 +42,7 @@
             <label for="blog-location">Vị trí:</label>    
             <form ref="myForm" style="display:flex;">
                 <div v-for="loc in locations" :key="loc.id" style="width: 150px;display: flex;">
-                  <input type="checkbox" v-model="locations" :value="loc.id" style="display:flex; width: fit-content;">
+                  <input type="checkbox" v-model="selectedLocation" :value="loc.label" style="display:flex; width: fit-content;">
                   <span style="display:flex;">{{ loc.label }}</span>
                 </div>
             </form>
@@ -116,10 +115,10 @@
     const DateSelect = ref(item.value.data_public);
 
     const options = [
-        { value: '1', label: 'Kinh Doanh' },
-        { value: '2', label: 'Giải Trí' },
-        { value: '3', label: 'Thế Giới' },
-        { value: '4', label: 'Thời Sự' },
+        { id: '1', label: 'Kinh Doanh' },
+        { id: '2', label: 'Giải Trí' },
+        { id: '3', label: 'Thế Giới' },
+        { id: '4', label: 'Thời Sự' },
     ];
 
     const locations = [
@@ -164,20 +163,25 @@
                 thumbs: selectedFile.value,
             }
             const response = await axios.put(`http://localhost:8000/api/blogs/${blogId}`, blog);
-            // if (response.ok) {
-            //     console.log('User added successfully')
-            // } else {
-            //     console.error('Failed to add user')
-            // }
+            if (response.ok) {
+                console.log('User added successfully')
+
+            } else {
+                console.error('Failed to add user')
+            }
         } catch (error) {
             console.error('Error:', error)
-        } 
+        }
+        
     }
 </script>
 
 <style scoped>
     .main-content {
-        background-color: WhiteSmoke; 
+        background-color: WhiteSmoke; /* DELETE LATER */
+        /* overflow: scroll;
+        overflow-x:hidden; */
+        /* height: calc(100vh - 20px); */
         padding:0 0 20px 0;
     }
 

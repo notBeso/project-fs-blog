@@ -7,6 +7,8 @@ use App\Models\Blog;
 
 class BlogController
 {
+
+
     /**
      * Display a listing of the resource.
      */
@@ -28,8 +30,13 @@ class BlogController
         $blog->category = $request->category;
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
-        // $blog->position = $request->position;
+        $blog->position = $request->position;
         // $blog->thumbs = $request->thumbs;
+
+        if ($request->hasFile('thumbs')) {
+            $path = $request->file('thumbs')->store('blog/thumbs', 'public');
+            $blog->thumbs = $path;
+        }
 
         $blog->save();
 
@@ -59,8 +66,17 @@ class BlogController
         $blog->category = $request->category;
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
-        // $blog->position = $request->position;
+        $blog->position = $request->position;
         // $blog->thumbs = $request->thumbs;
+        if ($request->hasFile('thumbs')) {
+            // Delete old file if exists
+            if ($blog->thumbs) {
+                Storage::disk('public')->delete($blog->thumbs);
+            }
+            // Store new file
+            $path = $request->file('thumbs')->store('blog/thumbs', 'public');
+            $blog->thumbs = $path;
+        }
 
         $blog->save();
 
@@ -74,7 +90,7 @@ class BlogController
     {
         $blog = Blog::find($id);
         $blog ->forceDelete();
-        // return $blog;
+
     }
 
     public function search(Request $request)
