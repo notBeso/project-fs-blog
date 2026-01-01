@@ -15,7 +15,7 @@
         <p>List Blog</p>
         <div class="main-form-container">
             <div>{{ results.id }}</div>
-            <table v-if="this.results.length" width="100%">
+            <table v-if="results.length" width="100%">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -29,19 +29,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="blog in this.results" :key="blog.id">
+                    <tr v-for="blog in results" :key="blog.id">
                         <td>{{ blog.id }}</td>
                         <td>{{ blog.title }}</td>
                         <td>{{ blog.category }}</td>
                         <td>{{ blog.public }}</td>
-                        <td>{{ blog.position }}</td>
+                        <td>{{ $locationIdsToTexts(blog.position, locations) }}</td>
                         <td>{{ blog.data_public }}</td>
-                        <!-- <td>
-                            <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>
-                        </td>
-                        <td>
-                            <button to="/" class="del-btn" @click="deleteItem(blog.id)">Delete</button>
-                        </td> -->
+			<td><EditBlogButton :blogId="blog.id" /></td>
+			<td><DeleteBlogButton :blogId="blog.id" :afterDeleteCallback="removeFromBlogs"/></td>
                     </tr>
                 </tbody>
             </table>
@@ -118,54 +114,29 @@
         border: 1px solid lightgray;
         gap: 0;
     }
-
-    .edit-btn {
-        color: dodgerblue;
-        background-color: white;
-        border: 1px solid dodgerblue;
-        font-size: small;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    
-    .del-btn {
-        color: red;
-        background-color: white;
-        border: 1px solid red;
-        font-size: small;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
 </style>
 
-<script>
+<script setup lang="ts">
 import axios from 'axios';
 import { debounce } from 'lodash';
+import { ref } from 'vue'
 
-export default {
-  data() {
-    return {
-      query: '',
-      results: [],
-    };
-  },
-  methods: {
-    performSearch: debounce(function () {
-        alert('click');
-        if (!this.query) {
-            this.results = [];
-            return;
-        }
-        axios.get(`http://localhost:8000/api/blogs/search?q=${encodeURIComponent(this.query)}`)
-            .then(response => {
-            this.results = response.data;
-            alert(this.results.id)
-            })
-            .catch(error => {
-            console.error("There was an error with the search request:", error);
-            });
-        }, 300)
-    }
-};
+const { $locationIdsToTexts, $getLocations } = useNuxtApp()
+
+const locations = await $getLocations()
+const query = ref('')
+const results = ref([])
+
+const performSearch = debounce(async () => {
+	if(!query.value) {
+		results.value = []
+		return
+	}
+
+	results.value = (await axios.get(`http://localhost:8000/api/blogs/search?q=${encodeURIComponent(query.value)}`)).data
+}, 300)
+
+const removeFromBlogs = (blogId) => {
+	results.value = results.value.filter((blog) => blog.id != blogId)	
+}
 </script>

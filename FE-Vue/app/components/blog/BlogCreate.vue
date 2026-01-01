@@ -33,6 +33,7 @@
                 <input
                     ref="fileInput"
                     type="file" 
+		    accept="image/*"
                     style="border: none;"
                     @change="handleFileChange"
                 />
@@ -86,7 +87,10 @@
 </template>
 
 <script setup>
+    import axios from 'axios'
     import { ref } from 'vue'
+
+    const { $getLocations, $getOptions } = useNuxtApp()
 
     const title = ref('');
     const describe = ref('');
@@ -98,26 +102,14 @@
     const selectedLocation = ref([])
     const DateSelect = ref('')
 
-    const options = [
-        { value: '1', label: 'Kinh Doanh' },
-        { value: '2', label: 'Giải Trí' },
-        { value: '3', label: 'Thế Giới' },
-        { value: '4', label: 'Thời Sự' },
-    ];
+    const options = ref(await $getOptions())
+    const locations = ref(await $getLocations())
 
-    const locations = [
-        { id: '1', label: 'Việt Nam' },
-        { id: '2', label: 'Châu Á' },
-        { id: '3', label: 'Châu Âu' },
-        { id: '4', label: 'Châu Mỹ' },
-    ];
-    
     const handleFileChange = (event) => {
         selectedFile.value = event.target.files[0]
     }
 
     const clearBox = () => {
-        alert('click')
         title.value = ''
         describe.value = ''
         detail.value = ''
@@ -135,31 +127,31 @@
     }
 
     const addBlog = async () => {
-        alert('CREATE')
         try {
-            const blog = {
-                id: 1,
-                title: title.value,
-                des: describe.value,
-                detail: detail.value,
-                category:optType.value,
-                public:publicity.value,
-                data_public:DateSelect.value,
-                position: selectedLocation.value,
-                thumbs: selectedFile.value,
-            }
-            
-            const response = await fetch('http://localhost:8000/api/blogs/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(blog)
-            })
+            const formData = new FormData();
 
-            console.log('User added successfully')
+            if(selectedFile.value) {
+            	formData.append('thumbs', selectedFile.value)
+	    }
+
+	    formData.append("title",  title.value)
+            formData.append("des",  describe.value)
+            formData.append("detail",  detail.value)
+            formData.append("category",  optType.value)
+            formData.append("public",  publicity.value)
+            formData.append("data_public",  DateSelect.value)
+
+	    selectedLocation.value.forEach(location => formData.append("position[]",  location))
+ 
+            const response = await fetch('http://localhost:8000/api/blogs/create', {
+            	method: 'POST',
+            	body: formData
+            })
+	    
+	    clearBox()
+	    alert('Success!')
         } catch (error) {
-            console.error('Error:', error)
+            alert('Error:', error)
         }
     }
 </script>

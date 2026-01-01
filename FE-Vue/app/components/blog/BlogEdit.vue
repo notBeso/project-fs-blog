@@ -38,6 +38,11 @@
                     @change="handleFileChange"
                     v-on:change="item.thumbs"
                 />
+
+		<div v-if="item.thumbs_url">
+			<h3>Current thumbs:</h3>
+                	<img :src="item.thumbs_url" v-if="item.thumbs_url" />
+		</div>
             </form>
 
             <label for="blog-location">Vị trí:</label>    
@@ -90,6 +95,7 @@
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
     import { RouterLink, useRoute } from 'vue-router';
+    const { $getLocations, $getOptions } = useNuxtApp()
 
     const title = ref('');
     const describe = ref('');
@@ -99,18 +105,10 @@
     const publicity = ref('')
     const optType = ref('');
     const selectedLocation = ref([])
-    const options = [
-        { value: '1', label: '1' },
-        { value: '2', label: '2' },
-        { value: '3', label: '3' },
-    ];
 
-    const locations = [
-        { id: '1', label: 'Việt Nam' },
-        { id: '2', label: 'Châu Á' },
-        { id: '3', label: 'Châu Âu' },
-        { id: '4', label: 'Châu Mỹ' },
-    ];
+    const options = ref(await $getOptions())
+    const locations = ref(await $getLocations())
+
     const DateSelect = ref('')
 
     const handleFileChange = (event) => {
@@ -118,7 +116,6 @@
     }
 
     const clearBox = () => {
-        alert('click')
         title.value = ''
         describe.value = ''
         detail.value = ''
@@ -141,20 +138,17 @@
 
     const fetchItemDetails = async () => {
         try {
-            // Make an API request to your Laravel endpoint
             const response = await axios.get(`http://localhost:8000/api/blogs/${blogId}`);
             return response.data
         } catch (error) {
-            console.error('Error fetching item details:', error);
+            alert('Error fetching item details:', error);
         }
     }
 
     const item = ref(await fetchItemDetails())
 
     const updateBlog = async () => {
-        alert('update')
         try {
-            console.log(item)
             const blog = {
                 title: item.value.title,
                 des: item.value.des,
@@ -175,15 +169,13 @@
             // })
             const response = await axios.put(`http://localhost:8000/api/blogs/${blogId}`, blog);
             if (response.ok) {
-            console.log('User added successfully')
-            clearBox()
+            	clearBox()
             } else {
-            console.error('Failed to add user')
+            	alert('Failed to add user')
             }
         } catch (error) {
-            console.error('Error:', error)
+            alert('Error:', error)
         }
-        RouterLink.pu
     }
 </script>
 

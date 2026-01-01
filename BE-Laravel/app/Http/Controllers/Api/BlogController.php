@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use App\Models\Blog;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class BlogController
 {
@@ -21,6 +24,17 @@ class BlogController
     public function store(Request $request)
     {
         $blog = new Blog;
+	$newFileName = null;
+	$thumbs = $request->thumbs;
+
+	\Log::info(strlen($thumbs));
+	\Log::info(is_null($thumbs) ? "NULL" : "NOT NULL");
+
+	if(!is_null($thumbs)) {
+	    \Log::info($thumbs);
+            $newFileName = Str::uuid()->toString() . '.' . $thumbs->extension();
+	    Storage::disk('public')->put($newFileName, $thumbs->get());
+	}
 
         $blog->title = $request->title;
         $blog->des = $request->des;
@@ -29,7 +43,10 @@ class BlogController
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
         $blog->position = $request->position;
-        $blog->thumbs = $request->thumbs;
+
+	if($newFileName) {
+	    $blog->thumbs = $newFileName;
+	}
 
         $blog->save();
 
@@ -41,9 +58,7 @@ class BlogController
      */
     public function show(string $id)
     {
-        $blog = Blog::where('id', $id)->first();
-
-        return $blog;
+        return Blog::where('id', $id)->first();
     }
 
     /**
@@ -85,5 +100,23 @@ class BlogController
                            ->get();
 
         return response()->json($results);
+    }
+
+    public function locations() {
+        return [
+    		[ "id" => '1', "label" =>'Việt Nam' ],
+        	[ "id" => '2', "label" => 'Châu Á' ],
+        	[ "id" => '3', "label" => 'Châu Âu' ],
+        	[ "id" => '4', "label" =>'Châu Mỹ' ],
+	];
+    }
+
+    public function options() {
+    	return [
+		[ "value" => '1', "label" => 'Kinh Doanh' ],
+		[ "value" => '2', "label" => 'Giải Trí' ],
+		[ "value" => '3', "label" => 'Thế Giới' ],
+		[ "value" => '4', "label" => 'Thời Sự' ],
+	];
     }
 }

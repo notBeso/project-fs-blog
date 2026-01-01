@@ -21,22 +21,13 @@
                         <td>{{ blog.title }}</td>
                         <td>{{ blog.category }}</td>
                         <td>{{ blog.public }}</td>
-                        <td>{{ blog.position }}</td>
+                        <td>{{ $locationIdsToTexts(blog.position, locations) }}</td>
                         <td>{{ blog.data_public }}</td>
                         <td>
-                            <!-- <button class="edit-btn" type="button">Edit</button> -->
-                            <button class="edit-btn" @click="goDetail(blog.id)">Edit</button>
-                            <!-- <NuxtLink class="edit-btn" :to="{ name: 'Edit', params: { id: blog.id } }">
-                                Edit
-                            </NuxtLink> -->
-                           
-                            <!-- <a href="route('blogs.edit', blog.id)" class="edit-btn">Edit</a> -->
-                            <!-- <button class="edit-btn" to="{ name: 'Edit', params: { id: blog.id } }">
-                                Edit
-                            </button> -->
+			    <EditBlogButton :blogId="blog.id" />
                         </td>
                         <td>
-                            <button to="/" class="del-btn" @click="deleteItem(blog.id)">Delete</button>
+			    <DeleteBlogButton :blogId="blog.id" :afterDeleteCallback="removeFromBlogs"/>
                         </td>
                     </tr>
                 </tbody>
@@ -81,79 +72,22 @@
         border: 1px solid lightgray;
         gap: 0;
     }
-
-    .edit-btn {
-        color: dodgerblue;
-        background-color: white;
-        border: 1px solid dodgerblue;
-        font-size: small;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
-
-    
-    .del-btn {
-        color: red;
-        background-color: white;
-        border: 1px solid red;
-        font-size: small;
-        padding: 5px 10px;
-        border-radius: 5px;
-    }
 </style>
 
-<script>
-import axios from 'axios';
+<script setup lang="ts">
+import axios from 'axios'
 
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-// import Vue from 'vue';
-// import VueRouter from 'vue-router';
-// Vue.use(VueRouter);
+
+const { $locationIdsToTexts, $getLocations } = useNuxtApp()
+
 const router = useRouter()
+const blogs = ref((await axios.get('http://localhost:8000/api/blogs')).data)
+const locations = ref(await $getLocations())
 
-
-export default {
-    data() {
-        return {
-            blogs: [],
-        };
-    },
-
-    methods: {
-        async deleteItem(id) {
-            if (confirm('Are you sure you want to delete this item?' + id)) {
-                try {
-                    await axios.delete(`http://localhost:8000/api/blogs/${id}/delete`);
-                    this.blogs = this.blogs.filter(blog => blog.id !== id);
-                    alert('Item deleted successfully!');
-                } 
-                catch (error) {
-                    console.error('Error deleting item:', error);
-                    alert('Failed to delete item.');
-                }
-                
-            }
-        },
-
-        async goDetail(blogid) {
-            alert(router + '  click ' + blogid);
-            //await router.push({ name: 'EP', params: { id: blogid } });
-            // alert('done')
-            this.$router.push(`/edit/${blogid}`);
-        }
-        
-    },
-    
-        async created() {
-            try {
-            const response = await axios.get('http://localhost:8000/api/blogs')
-            this.blogs = response.data
-            } catch (error) {
-            console.error('Error fetching blogs:', error)
-            }
-        },
-
-        
+const goDetail= (blogId) => router.push(`/edit/${blogId}`)
+const removeFromBlogs = (blogId) => {
+	blogs.value = blogs.value.filter((blog) => blog.id != blogId)
 }
 </script>

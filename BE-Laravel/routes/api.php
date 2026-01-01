@@ -13,6 +13,12 @@ Route::post('/blogs/create', [BlogController::class, 'store']);
 // search item
 Route::get('/blogs/search', [BlogController::class, 'search']);
 
+// locations
+Route::get('/blogs/locations', [BlogController::class, 'locations']);
+
+// options
+Route::get('/blogs/options', [BlogController::class, 'options']);
+
 // show item
 Route::get('/blogs/{id}', [BlogController::class, 'show']);
 
