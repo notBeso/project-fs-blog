@@ -70,7 +70,7 @@ class BlogController
         $blog->data_public = $request->data_public;
         $blog->position = $request->position;
 
-	if($blog->isRemoveThumbs) {
+	if($request->isRemoveThumbs) {
 	    $blog->thumbs = null;
 	}
 
@@ -104,10 +104,7 @@ class BlogController
     {
         $searchTerm = $request->input('q');
 
-        $results = Blog::where('title', 'LIKE', "%{$searchTerm}%")
-                           ->get();
-
-        return response()->json($results);
+        return Blog::where('title', 'LIKE', "%{$searchTerm}%")->get();
     }
 
     public function locations() {

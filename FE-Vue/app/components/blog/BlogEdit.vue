@@ -30,17 +30,21 @@
                     v-model="item.detail"></textarea>
             </form>
 
-            <form>
+            <form @submit.prevent>
                 <input
                     ref="fileInput"
                     type="file" 
                     style="border: none;"
                     @change="handleFileChange"
                     v-on:change="item.thumbs"
+                    v-if="isRemoveThumbs"
+                    accept="image/*"
                 />
 
-		<div v-if="item.thumbs_url">
-			<h3>Current thumbs:</h3>
+		<div v-else-if="item.thumbs_url">
+			<label>Ảnh đại diện hiện tại
+			<button @click="() => isRemoveThumbs = true">Xóa</button>
+			</label>
                 	<img :src="item.thumbs_url" v-if="item.thumbs_url" />
 		</div>
             </form>
@@ -85,16 +89,14 @@
             </div>
             
         </div>
-        <!-- <button class="submit-btn" type="submit">{{ store.isEdit ? 'Update' : 'Create' }}</button> -->
         <button class="submit-btn" type="submit" @click="updateBlog">Update</button>
-        <button class="clear-btn" @click="clearBox">Clear</button>
     </div>
 </template>
 
 <script setup>
     import { ref, onMounted } from 'vue';
     import axios from 'axios';
-    import { RouterLink, useRoute } from 'vue-router';
+    import { RouterLink, useRoute, useRouter } from 'vue-router';
     const { $getLocations, $getOptions } = useNuxtApp()
 
     const title = ref('');
@@ -115,90 +117,47 @@
         selectedFile.value = event.target.files[0]
     }
 
-    const clearBox = () => {
-        title.value = ''
-        describe.value = ''
-        detail.value = ''
-        
-
-        if (fileInput.value) {
-            fileInput.value.value = ''
-        }
-        selectedFile.value = null
-
-        publicity.value = ''
-        selectedLocation.value = []
-        optType.value = ''
-        DateSelect.value = ''
-    }
-
     const route = useRoute();
+    const router = useRouter()
     
     const blogId = route.params.id;
 
-    const fetchItemDetails = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8000/api/blogs/${blogId}`);
-            return response.data
-        } catch (error) {
-            alert('Error fetching item details:', error);
-        }
-    }
+    const item = ref((await axios.get(`http://localhost:8000/api/blogs/${blogId}`)).data)
+    item.value.thumbs = null
+    const isRemoveThumbs = ref(!item.value.thumbs_url)
 
-    const item = ref(await fetchItemDetails())
+    const initStatesForItem = () => {
+        item.value.thumbs = null
+        selectedFile.value = null
+        isRemoveThumbs.value = !item.value.thumbs_url
+    }
 
     const updateBlog = async () => {
         try {
-            const blog = {
-                title: item.value.title,
-                des: item.value.des,
-                detail: item.value.detail,
-                category: item.value.category,
-                public: item.value.public,
-                data_public: item.value.data_public,
-                position: item.value.position,
-                thumbs: item.value.thumbs,
-            }
+	    const formData = new FormData()
+
+            formData.append("title", item.value.title)
+            formData.append("des", item.value.des)
+            formData.append("detail", item.value.detail)
+            formData.append("category", item.value.category)
+            formData.append("public", item.value.public)
+            formData.append("data_public", item.value.data_public)
+
+	    item.value.position.forEach((pos) => formData.append("position[]", pos))
+            formData.append("isRemoveThumbs", isRemoveThumbs.value)
+
+	    if(isRemoveThumbs.value && selectedFile.value) {
+		formData.append("thumbs", selectedFile.value)
+	    }
             
-            // const response = await fetch('http://localhost:8000/api/blogs/edit', {
-            // method: 'PUT',
-            // headers: {
-            //     'Content-Type': 'application/json'
-            // },
-            // body: JSON.stringify(blog)
-            // })
-            const response = await axios.put(`http://localhost:8000/api/blogs/${blogId}`, blog);
-            if (response.ok) {
-            	clearBox()
-            } else {
-            	alert('Failed to add user')
-            }
+            item.value = (await axios.put(`http://localhost:8000/api/blogs/${blogId}`, formData)).data;
+	    alert('Success')
+	    initStatesForItem()
         } catch (error) {
             alert('Error:', error)
         }
     }
 </script>
-
-<!-- <script>
-    export default {
-        props: ['id'], // This is passed from the route
-        data() {
-            return {
-                item: null
-            }
-        },
-        created() {
-            this.fetchItem()
-        },
-        methods: {
-        async fetchItem() {
-            const response = await fetch(`http://localhost:3000/blogs/${this.id}`)
-            this.item = await response.json()
-        }
-    }
-    }
-
-</script> -->
 
 <style scoped>
     .main-content {
@@ -284,7 +243,7 @@
         font-size: larger;
     }
 
-    .submit-btn , .clear-btn {
+    .submit-btn {
         border-radius: 5px;
         margin: 5px;
         padding: 6px 10px;
@@ -296,9 +255,5 @@
     .submit-btn {
         background-color: forestgreen;
 
-    }
-
-    .clear-btn {
-        background-color: royalblue;
     }
 </style>
