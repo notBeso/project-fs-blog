@@ -35,16 +35,29 @@
                     type="file" 
                     style="border: none;"
                     @change="handleFileChange"
-                    v-on:change="fileInput"
                 />
+                here
+                {{ fileInput }}
             </form>
 
             <label for="blog-location">Vị trí:</label>    
             <form ref="myForm" style="display:flex;">
-                <div v-for="loc in locations" :key="loc.id" style="width: 150px;display: flex;">
+                <div v-for="loc in locations" style="width: 15%;display: flex;">
                   <input type="checkbox" v-model="selectedLocation" :value="loc.label" style="display:flex; width: fit-content;">
-                  <span style="display:flex;">{{ loc.label }}</span>
+                  <label :key="loc.id" style="display:flex;">{{ loc.label }}</label>
                 </div>
+                <!-- <input type="checkbox" id="1" value="Việt Nam" v-model="selectedLocation" />
+                <label for="1">Việt Nam</label>
+                
+                <input type="checkbox" id="2" value="Châu Á" v-model="selectedLocation" />
+                <label for="2">Châu Á</label>
+                
+                <input type="checkbox" id="3" value="Châu Âu" v-model="selectedLocation" />
+                <label for="3">Châu Âu</label>
+
+                <input type="checkbox" id="4" value="Châu Mỹ" v-model="selectedLocation" />
+                <label for="4">Châu Mỹ</label> -->
+                {{selectedLocation}}
             </form>
 
             <label for="blog-location">Public:</label>
@@ -79,7 +92,6 @@
             </div>
             
         </div>
-        <!-- <button class="submit-btn" type="submit">{{ store.isEdit ? 'Update' : 'Create' }}</button> -->
         <button class="submit-btn" type="submit" @click="updateBlog">Update</button>
         <button class="clear-btn" @click="clearBox">Clear</button>
     </div>
@@ -107,8 +119,7 @@
     const title = ref(item.value.title);
     const describe = ref(item.value.des);
     const detail = ref(item.value.detail);
-    const fileInput = ref(null);
-    const selectedFile = ref(item.value.thumbs);
+    const fileInput = ref(item.value.thumbs);
     const publicity = ref(item.value.public);
     const optType = ref(item.value.category);
     const selectedLocation = ref(item.value.position);
@@ -129,7 +140,7 @@
     ];
 
     const handleFileChange = (event) => {
-        selectedFile.value = event.target.files[0]
+        fileInput.value = event.target.files[0]
     }
 
     const clearBox = () => {
@@ -163,6 +174,22 @@
                 thumbs: selectedFile.value,
             }
             const response = await axios.put(`http://localhost:8000/api/blogs/${blogId}`, blog);
+            // const formData = new FormData()
+            // Append info
+            // formData.append('title', title.value)
+            // formData.append('des', describe.value)
+            // formData.append('detail', detail.value)
+            // formData.append('category', optType.value)
+            // formData.append('public', publicity.value)
+            // formData.append('data_public', DateSelect.value)
+            // formData.append('position', selectedLocation.value)
+            // formData.append('thumbs', fileInput.value)
+            
+            // const response = await axios.post(`http://localhost:8000/api/blogs/create`, formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // })
             if (response.ok) {
                 console.log('User added successfully')
 

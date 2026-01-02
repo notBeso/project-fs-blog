@@ -8,7 +8,7 @@
                     type="text" 
                     id="tittle" 
                     name="blog-tittle" 
-                    style="height: 30px;"
+                    style="min-height: 30px;"
                     v-model="title"></textarea>
             </form>
 
@@ -17,7 +17,7 @@
                 <textarea 
                     id="describe" 
                     name="blog-describe" 
-                    style="height: 100px;"
+                    style="min-height: 100px;"
                     v-model="describe"></textarea>
             </form>
 
@@ -26,25 +26,30 @@
                 <textarea 
                     id="detail" 
                     name="blog-detail" 
-                    style="height: 250px;"
+                    style="min-height: 250px;"
                     v-model="detail"></textarea>
+                    
             </form>
 
-            <form>
+            <form action="{{ route('blogs.store') }}" method="POST" enctype="multipart/form-data" >
+                
                 <input
                     ref="fileInput"
                     type="file" 
                     style="border: none;"
                     @change="handleFileChange"
                 />
+                    1 {{ fileInput }}
             </form>
 
             <label for="blog-location">Vị trí:</label>    
             <form ref="myForm" style="display:flex;">
-                <div v-for="loc in locations" :key="loc.label" style="width: 15%;display: flex;">
+                <div v-for="loc in locations" style="width: 15%;display: flex;">
                   <input type="checkbox" v-model="selectedLocation" :value="loc.label" style="display:flex; width: fit-content;">
-                  <span style="display:flex;font-size: large;">{{ loc.label }}</span>
+                  <label :key="loc.id" style="display:flex;">{{ loc.label }}</label>
                 </div>
+                
+                {{ selectedLocation }}
             </form>
 
             <label for="blog-location">Public:</label>
@@ -88,12 +93,12 @@
 <script setup>
     import { ref } from 'vue';
     import axios from 'axios';
+    import { useForm } from 'vee-validate';
 
     const title = ref('');
     const describe = ref('');
     const detail = ref('');
     const fileInput = ref(null);
-    const selectedFile = ref(null);
     const publicity = ref('');
     const optType = ref('');
     const selectedLocation = ref([]);
@@ -114,7 +119,8 @@
     ];
     
     const handleFileChange = (event) => {
-        selectedFile.value = event.target.files[0]
+        fileInput.value = event.target.files[0]
+
     }
 
     const clearBox = () => {
@@ -146,9 +152,26 @@
                 public:publicity.value,
                 data_public:DateSelect.value,
                 position: selectedLocation.value,
-                thumbs: selectedFile.value,
+                thumbs: fileInput.value,
             }
             const response = await axios.post(`http://localhost:8000/api/blogs/create`, blog);
+            
+            // const formData = new FormData()
+            // // Append info
+            // formData.append('title', title.value)
+            // formData.append('des', describe.value)
+            // formData.append('detail', detail.value)
+            // formData.append('category', optType.value)
+            // formData.append('public', publicity.value)
+            // formData.append('data_public', DateSelect.value)
+            // formData.append('position', selectedLocation.value)
+            // formData.append('thumbs', fileInput.value)
+            
+            // const response = await axios.post(`http://localhost:8000/api/blogs/create`, formData, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // })
             console.log('User added successfully');
         } catch (error) {
             console.error('Error:', error);

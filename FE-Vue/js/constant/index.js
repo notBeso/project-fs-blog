@@ -5,6 +5,7 @@ import ListPage from '../app/pages/index.vue';
 import SearchPage from '../pages/search.vue';
 import NewPage from '../pages/new.vue';
 import EditPage from '../pages/edit.vue';
+import TestPage from '../pages/try.vue';
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -46,5 +47,3 @@ const router = createRouter({
 });
 
 export default router;
-
-

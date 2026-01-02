@@ -8,9 +8,22 @@ class Blog extends Model
 {
     public $timestamps = false;
 
+    protected $fillable = [
+
+        'title',
+        'des',
+        'detail',
+        'category',
+        'public',
+        'data_public',
+        'position',
+        'thumbs',
+    ];
+
     protected $casts = [
         'position' => 'array',
-        // 'thumbs' => 'array',
+        'thumbs' => 'array',
+        'public' => 'boolean',
     ];
 
 }

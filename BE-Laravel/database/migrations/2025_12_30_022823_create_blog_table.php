@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('public');
             $table->string('data_public');
             $table->json('position')->nullable(); //json (array)
-            $table->string('thumbs')->nullable(); //string or text
+            $table->json('thumbs')->nullable(); //string or text
             $table->id('id');
         });
     }

@@ -31,12 +31,7 @@ class BlogController
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
         $blog->position = $request->position;
-        // $blog->thumbs = $request->thumbs;
-
-        if ($request->hasFile('thumbs')) {
-            $path = $request->file('thumbs')->store('blog/thumbs', 'public');
-            $blog->thumbs = $path;
-        }
+        // $blog->thumbs = $request->file('thumbs')->store('files', 'public');
 
         $blog->save();
 
@@ -67,16 +62,7 @@ class BlogController
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
         $blog->position = $request->position;
-        // $blog->thumbs = $request->thumbs;
-        if ($request->hasFile('thumbs')) {
-            // Delete old file if exists
-            if ($blog->thumbs) {
-                Storage::disk('public')->delete($blog->thumbs);
-            }
-            // Store new file
-            $path = $request->file('thumbs')->store('blog/thumbs', 'public');
-            $blog->thumbs = $path;
-        }
+        // $blog->thumbs = $request->file('thumbs')->store('files', 'public');
 
         $blog->save();
 
