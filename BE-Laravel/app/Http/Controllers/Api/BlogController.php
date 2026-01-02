@@ -27,11 +27,7 @@ class BlogController
 	$newFileName = null;
 	$thumbs = $request->thumbs;
 
-	\Log::info(strlen($thumbs));
-	\Log::info(is_null($thumbs) ? "NULL" : "NOT NULL");
-
 	if(!is_null($thumbs)) {
-	    \Log::info($thumbs);
             $newFileName = Str::uuid()->toString() . '.' . $thumbs->extension();
 	    Storage::disk('public')->put($newFileName, $thumbs->get());
 	}
@@ -44,9 +40,7 @@ class BlogController
         $blog->data_public = $request->data_public;
         $blog->position = $request->position;
 
-	if($newFileName) {
-	    $blog->thumbs = $newFileName;
-	}
+	$blog->thumbs = $newFileName;
 
         $blog->save();
 
@@ -74,8 +68,23 @@ class BlogController
         $blog->category = $request->category;
         $blog->public = $request->public;
         $blog->data_public = $request->data_public;
-        // $blog->position = $request->position;
-        // $blog->thumbs = $request->thumbs;
+        $blog->position = $request->position;
+
+	if($blog->isRemoveThumbs) {
+	    $blog->thumbs = null;
+	}
+
+	$newFileName = null;
+        $thumbs = $request->thumbs;
+
+        if(!is_null($thumbs)) {
+            $newFileName = Str::uuid()->toString() . '.' . $thumbs->extension();
+            Storage::disk('public')->put($newFileName, $thumbs->get());
+	}
+
+	if(!is_null($newFileName)) {
+	    $blog->thumbs = $newFileName;
+	}
 
         $blog->save();
 
@@ -89,7 +98,6 @@ class BlogController
     {
         $blog = Blog::find($id);
         $blog ->forceDelete();
-        // return $blog;
     }
 
     public function search(Request $request)

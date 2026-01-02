@@ -19,6 +19,10 @@ class Blog extends Model
         ];
     }
 
+    protected function position() : Attribute {
+	return Attribute::set(fn ($pos) => is_null($pos) ? '[]' : json_encode($pos));
+    }
+
     protected function thumbsUrl() : Attribute {
     	return Attribute::make(
 		get: fn() => !is_null($this->thumbs) && Storage::disk('public')->exists($this->thumbs) ? asset('storage/' . $this->thumbs) : null,
